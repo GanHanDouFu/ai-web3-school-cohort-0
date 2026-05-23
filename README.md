@@ -7,7 +7,7 @@
 - [Handbook](https://aiweb3.school/zh/handbook/)
 - [WCB 课程页面](https://web3career.build/zh/programs/AI-Web3-School)
 - [WCB Learning 页面](https://web3career.build/zh/programs/AI-Web3-School#tab=learning)
-- [GitHub 仓库](https://github.com/)
+- [GitHub 仓库](https://github.com/GanHanDouFu/ai-web3-school-cohort-0)
 
 ## 目录说明
 
