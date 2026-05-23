@@ -1,0 +1,17 @@
+# Secrets and credentials
+.env
+*.key
+*.pem
+*.secret
+secrets/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+*.swp
+
+# Claude
+.claude/
