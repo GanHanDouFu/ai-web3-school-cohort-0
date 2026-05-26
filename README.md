@@ -2,6 +2,15 @@
 
 个人学习记录与 proof-of-work 工作区，用于 AI × Web3 School 的学习打卡、笔记沉淀和 Handbook 反馈。
 
+## 学员信息
+
+- **AI 基础**：有基础（熟悉 ChatGPT/Claude，了解 Prompt）
+- **Web3 基础**：新手
+- **编程能力**：会基础脚本
+- **目标方向**：开发
+- **每日学习时间**：2-3 小时
+- **开始日期**：2026-05-23
+
 ## 相关链接
 
 - [Handbook](https://aiweb3.school/zh/handbook/)
@@ -20,6 +29,66 @@
 | `hackathon/` | 黑客松项目 |
 | `submissions/` | 提交的作业和项目 |
 | `templates/` | 笔记模板 |
+| `week1/` | Week 1 学习成果 |
+
+## Week 1 完成情况
+
+### 模块 A：AI 基础 ✅
+
+- [x] 理解 LLM 基本工作方式（概率生成、上下文窗口）
+- [x] 理解四个控制层面（上下文、系统指令、提示词、工具调用）
+- [x] 理解 Prompt → Workflow → Agent 边界
+- [x] 理解 AI 输出验证的必要性（幻觉、引用错误、推理漂移）
+- [x] 理解 Agent 核心技术组件（状态、记忆、MCP、Tool Calling、Tracing）
+- [x] 搭建 Learning Agent（Claude Code）
+- [x] 完成一次 Agent 协助学习任务
+
+### 模块 B：Web3 基础 ✅
+
+- [x] 理解账户、地址、钱包的关系（助记词 → 私钥 → 公钥 → 地址）
+- [x] 理解签名与交易的关系（签名 = 授权具体动作）
+- [x] 理解 Gas 机制（计算成本、激励验证者、L1 vs L2）
+- [x] 理解智能合约 vs 普通后端（状态公开、执行透明、不可随意修改）
+- [x] 理解主网 vs 测试网（学习先用测试网）
+- [x] 理解区块浏览器的作用（查询交易、验证状态）
+- [x] 了解账户抽象、智能账户、多签等高级概念
+
+### 模块 C：最小交叉实验 ✅
+
+- [x] 设计 AI 输出 → 人工复核 → 钱包确认 → 链上执行 → 区块验证 流程
+- [x] 理解每个环节的风险和应对措施
+- [x] 生成可交互学习产物（Web3 概念测验）
+
+### 待完成（需实际操作）
+
+- [ ] 创建测试钱包（MetaMask）
+- [ ] 领取 Sepolia 测试币
+- [ ] 发送一笔测试交易
+- [ ] 部署一个最小智能合约
+- [ ] 完成一次合约读写
+- [ ] 完成模块 C 的实际链上实验
+
+## Learning Agent 配置
+
+- **工具**：Claude Code (Anthropic CLI)
+- **模型**：Claude Opus 4.7
+- **使用场景**：
+  - 课程资料整理与概念解释
+  - 学习笔记生成
+  - 代码生成（Solidity、HTML/JS）
+  - Prompt 工程实践
+  - GitHub repo 维护
+
+## Week 1 产出
+
+| 文件 | 说明 |
+|------|------|
+| `week1/notes/module-a-ai-basics.md` | AI 基础概念笔记 |
+| `week1/notes/module-b-web3-basics.md` | Web3 基础概念笔记 |
+| `week1/notes/module-c-crossover-experiment.md` | 交叉实验设计 |
+| `week1/prompts/learning-agent-prompt.md` | Agent 使用记录 |
+| `week1/logs/agent-session-01.md` | Agent 学习日志 |
+| `week1/demos/web3-concept-quiz.html` | Web3 概念测验（可交互） |
 
 ## 隐私提醒
 

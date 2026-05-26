@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 基础概念测验</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 700px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+        .progress-bar {
+            background: #1a1a2e;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .question-num { color: #7b2ff7; font-size: 0.9em; margin-bottom: 10px; }
+        .question { font-size: 1.2em; line-height: 1.6; margin-bottom: 20px; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+        .option:hover { border-color: #7b2ff7; background: rgba(123,47,247,0.1); }
+        .option.correct {
+            border-color: #00e676;
+            background: rgba(0,230,118,0.15);
+        }
+        .option.wrong {
+            border-color: #ff5252;
+            background: rgba(255,82,82,0.15);
+        }
+        .option.disabled { pointer-events: none; opacity: 0.7; }
+        .explanation {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(0,210,255,0.08);
+            border-left: 3px solid #00d2ff;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95em;
+            line-height: 1.6;
+            display: none;
+        }
+        .next-btn {
+            display: none;
+            margin: 20px auto 0;
+            padding: 12px 30px;
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .next-btn:hover { transform: scale(1.05); }
+        .result {
+            text-align: center;
+            display: none;
+        }
+        .score {
+            font-size: 4em;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .score-label { color: #888; margin-top: 10px; }
+        .restart-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .concept-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(123,47,247,0.2);
+            border: 1px solid #7b2ff7;
+            border-radius: 8px;
+            color: #b388ff;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .concept-link:hover { background: rgba(123,47,247,0.3); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Web3 基础概念测验</h1>
+        <p class="subtitle">测试你对 Web3 核心概念的理解 · Week 1</p>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-area"></div>
+
+        <div class="card result" id="result">
+            <div class="score" id="score">0</div>
+            <div class="score-label">/ 10 题正确</div>
+            <p id="result-msg" style="margin-top:15px;font-size:1.1em;"></p>
+            <button class="restart-btn" onclick="restart()">重新开始</button>
+        </div>
+    </div>
+
+    <script>
+    const questions = [
+        {
+            q: "钱包的本质是什么？",
+            options: [
+                "一个存储加密货币的银行账户",
+                "一个私钥管理器和链上动作入口",
+                "一个去中心化的交易平台",
+                "一个区块链节点"
+            ],
+            answer: 1,
+            explain: "钱包不存储代币（代币在链上），而是管理私钥。私钥控制地址，地址关联链上资产。钱包是签名和发起交易的工具。"
+        },
+        {
+            q: "助记词泄露会导致什么后果？",
+            options: [
+                "只能查看余额，不能操作",
+                "账户被冻结 24 小时",
+                "失去对所有关联资产的控制权",
+                "需要重新注册账户"
+            ],
+            answer: 2,
+            explain: "助记词可以推导出私钥，私钥控制资产。泄露助记词等于把资产控制权交给他人，且链上交易不可撤销。"
+        },
+        {
+            q: "Gas 费的本质是什么？",
+            options: [
+                "交易所收取的手续费",
+                "链上执行计算的成本，激励验证者",
+                "钱包软件的使用费",
+                "矿工的小费"
+            ],
+            answer: 1,
+            explain: "Gas 是以太坊网络对计算资源的定价。每一步操作消耗 Gas，Gas 费支付给验证者，同时防止无限循环等恶意行为。"
+        },
+        {
+            q: "智能合约与普通后端代码最大的区别是什么？",
+            options: [
+                "智能合约用不同的编程语言",
+                "智能合约部署后状态公开、执行透明、不可随意修改",
+                "智能合约运行更快",
+                "智能合约不需要测试"
+            ],
+            answer: 1,
+            explain: "智能合约的核心特性是：状态公开可查、执行透明可审计、部署后难以修改（或需要特定权限）。这与私有服务器上的后端代码完全不同。"
+        },
+        {
+            q: "为什么学习和实验应该先在测试网完成？",
+            options: [
+                "测试网速度更快",
+                "测试网的代币免费，操作出错不会损失真钱",
+                "测试网功能更全",
+                "主网需要审批才能使用"
+            ],
+            answer: 1,
+            explain: "测试网使用无价值的测试代币，交易不涉及真实资产。主网操作消耗真钱且不可撤销，新手必须先在测试网练习。"
+        },
+        {
+            q: "签名一笔交易意味着什么？",
+            options: [
+                "只是登录确认",
+                "授权一个具体的链上动作，如转账或合约调用",
+                "创建一个新的钱包地址",
+                "连接到区块链网络"
+            ],
+            answer: 1,
+            explain: "签名是用私钥对交易数据进行加密授权。一旦签名并广播，交易将被链上执行且不可撤销。签名前必须仔细核对交易参数。"
+        },
+        {
+            q: "区块浏览器（如 Etherscan）不能做什么？",
+            options: [
+                "查看交易详情和状态",
+                "查看地址余额和历史",
+                "修改链上数据",
+                "查看合约代码"
+            ],
+            answer: 2,
+            explain: "区块浏览器是只读的链上数据查询工具。任何人都可以查看，但没有人能通过浏览器修改链上数据（除非发起新交易）。"
+        },
+        {
+            q: "L2（如 Arbitrum）相比 L1 的主要优势是什么？",
+            options: [
+                "安全性更高",
+                "Gas 费便宜 10-100 倍，同时继承 L1 安全性",
+                "完全去中心化",
+                "不需要钱包就能使用"
+            ],
+            answer: 1,
+            explain: "L2 将大量计算放在链下处理，定期将结果提交到 L1。这样既继承了 L1 的安全性，又大幅降低了 Gas 成本。"
+        },
+        {
+            q: "地址等于匿名吗？",
+            options: [
+                "是的，地址无法追踪",
+                "不等于。地址是假名，交易历史公开可查，可通过分析关联真实身份",
+                "只有主网地址可追踪",
+                "测试网地址是匿名的"
+            ],
+            answer: 1,
+            explain: "区块链地址是假名（pseudonymous），不是匿名（anonymous）。所有交易公开可查，通过链上分析、交易所 KYC 等方式可以关联真实身份。"
+        },
+        {
+            q: "为什么 AI Agent 不应直接持有私钥？",
+            options: [
+                "AI 没有能力生成私钥",
+                "AI 可能被 prompt injection 攻击，导致未授权的资产操作",
+                "私钥格式对 AI 不兼容",
+                "AI 运行太慢无法签名"
+            ],
+            answer: 1,
+            explain: "AI Agent 可能被恶意输入操控（prompt injection），如果直接持有私钥，可能被诱导进行未授权的转账或合约操作。关键操作必须保留人工确认。"
+        }
+    ];
+
+    let current = 0, score = 0, answered = false;
+
+    function render() {
+        if (current >= questions.length) {
+            showResult();
+            return;
+        }
+        const q = questions[current];
+        document.getElementById('progress').style.width = ((current / questions.length) * 100) + '%';
+        document.getElementById('quiz-area').innerHTML = `
+            <div class="card">
+                <div class="question-num">问题 ${current + 1} / ${questions.length}</div>
+                <div class="question">${q.q}</div>
+                <div class="options">
+                    ${q.options.map((o, i) => `<div class="option" onclick="select(${i})">${o}</div>`).join('')}
+                </div>
+                <div class="explanation" id="explain">${q.explain}</div>
+                <button class="next-btn" id="next-btn" onclick="next()">下一题 →</button>
+            </div>
+        `;
+        answered = false;
+    }
+
+    function select(idx) {
+        if (answered) return;
+        answered = true;
+        const opts = document.querySelectorAll('.option');
+        opts.forEach(o => o.classList.add('disabled'));
+        const correct = questions[current].answer;
+        if (idx === correct) {
+            opts[idx].classList.add('correct');
+            score++;
+        } else {
+            opts[idx].classList.add('wrong');
+            opts[correct].classList.add('correct');
+        }
+        document.getElementById('explain').style.display = 'block';
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function next() {
+        current++;
+        render();
+    }
+
+    function showResult() {
+        document.getElementById('quiz-area').style.display = 'none';
+        document.getElementById('progress').style.width = '100%';
+        const el = document.getElementById('result');
+        el.style.display = 'block';
+        document.getElementById('score').textContent = score;
+        const msgs = {
+            10: "满分！你对 Web3 基础掌握扎实。",
+            7: "不错！大部分概念已经理解，复习一下错题。",
+            4: "及格边缘，建议重读 Module B 笔记。",
+            0: "需要更多学习，先读完笔记再来挑战。"
+        };
+        const threshold = score >= 10 ? 10 : score >= 7 ? 7 : score >= 4 ? 4 : 0;
+        document.getElementById('result-msg').textContent = msgs[threshold];
+    }
+
+    function restart() {
+        current = 0; score = 0;
+        document.getElementById('result').style.display = 'none';
+        document.getElementById('quiz-area').style.display = 'block';
+        render();
+    }
+
+    render();
+    </script>
+</body>
+</html>
