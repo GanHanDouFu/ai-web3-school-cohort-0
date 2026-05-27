@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Token 生成可视化</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 0.9em; }
+        .panel {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .panel-title {
+            font-size: 0.85em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+        .output-area {
+            font-family: 'Courier New', monospace;
+            font-size: 1.15em;
+            line-height: 1.8;
+            min-height: 60px;
+            padding: 16px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+        }
+        .token {
+            display: inline-block;
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin: 1px 0;
+            transition: all 0.3s;
+        }
+        .token.current {
+            background: rgba(255,238,0,0.2);
+            border-bottom: 2px solid #feca57;
+        }
+        .token.done {
+            opacity: 0.8;
+        }
+        .candidates { margin-top: 16px; }
+        .candidate-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 0.95em;
+        }
+        .candidate-token {
+            width: 100px;
+            font-family: monospace;
+            color: #48dbfb;
+        }
+        .bar-bg {
+            flex: 1;
+            height: 22px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .bar-fill.selected { background: linear-gradient(90deg, #feca57, #ff6b6b); }
+        .bar-fill.other { background: rgba(72,219,251,0.3); }
+        .prob { width: 50px; text-align: right; color: #888; font-size: 0.85em; }
+        .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn {
+            padding: 10px 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            color: #e0e0e0;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: rgba(255,255,255,0.1); border-color: #48dbfb; }
+        .btn.active { background: rgba(72,219,251,0.2); border-color: #48dbfb; }
+        .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .prompt-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1em;
+            font-family: monospace;
+            margin-bottom: 12px;
+        }
+        .prompt-input:focus { outline: none; border-color: #48dbfb; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .info-item { font-size: 0.9em; }
+        .info-label { color: #666; }
+        .info-value { color: #48dbfb; font-family: monospace; }
+        .speed-control { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .speed-control input { flex: 1; }
+        .explanation {
+            font-size: 0.85em;
+            color: #888;
+            line-height: 1.6;
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LLM Token 生成可视化</h1>
+        <p class="subtitle">模拟大语言模型逐 token 生成文本的过程</p>
+
+        <div class="panel">
+            <div class="panel-title">输入 Prompt</div>
+            <input type="text" class="prompt-input" id="promptInput" value="AI 将改变" placeholder="输入起始文本...">
+            <div class="controls">
+                <button class="btn" id="startBtn" onclick="startGeneration()">开始生成</button>
+                <button class="btn" id="stepBtn" onclick="stepGeneration()" disabled>下一步 Token</button>
+                <button class="btn" id="autoBtn" onclick="toggleAuto()" disabled>自动播放</button>
+                <button class="btn" id="resetBtn" onclick="reset()">重置</button>
+            </div>
+            <div class="speed-control">
+                <span class="info-label">速度：</span>
+                <input type="range" id="speedSlider" min="200" max="2000" value="800" step="100">
+                <span class="info-value" id="speedLabel">800ms</span>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">生成输出</div>
+            <div class="output-area" id="output">
+                <span style="color:#666">点击"开始生成"查看效果...</span>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">候选 Token 概率分布</div>
+            <div class="candidates" id="candidates">
+                <span style="color:#666">等待生成...</span>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">生成信息</div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">已生成 Token：</span>
+                    <span class="info-value" id="tokenCount">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">当前 Temperature：</span>
+                    <span class="info-value" id="tempDisplay">0.7</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">选择策略：</span>
+                    <span class="info-value" id="strategyDisplay">概率采样</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">总概率：</span>
+                    <span class="info-value" id="totalProb">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">概念解释</div>
+            <div class="explanation">
+                <strong>LLM 如何生成文本？</strong><br><br>
+                1. <strong>Token 化</strong>：输入文本被切分成 token（词、子词或字符）<br>
+                2. <strong>概率预测</strong>：模型根据上下文计算每个可能的下一个 token 的概率<br>
+                3. <strong>采样</strong>：根据 temperature 参数，从候选中选择一个 token<br>
+                4. <strong>拼接</strong>：选中的 token 加入上下文，重复步骤 2-3<br><br>
+                <strong>Temperature</strong>：控制随机性。低 temperature（如 0.1）倾向选择最高概率 token，输出更确定；高 temperature（如 1.0）增加随机性，输出更多样。<br><br>
+                <strong>注意</strong>：本页面使用模拟概率，不是真实模型输出。实际 LLM 的概率分布更复杂。
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const sequences = {
+        "AI 将改变": {
+            tokens: ["AI", "将", "改变", "世界", "的", "方式", "，", "从", "医疗", "到", "教育", "，", "无处", "不在", "。"],
+            candidates: [
+                [{t:"世界",p:0.35},{t:"人类",p:0.25},{t:"我们",p:0.15},{t:"未来",p:0.12},{t:"很多",p:0.08},{t:"整个",p:0.05}],
+                [{t:"的",p:0.45},{t:"和",p:0.20},{t:"在",p:0.15},{t:"以",p:0.10},{t:"。",p:0.06},{t:"，",p:0.04}],
+                [{t:"方式",p:0.30},{t:"生活",p:0.25},{t:"发展",p:0.18},{t:"运行",p:0.12},{t:"工作",p:0.10},{t:"思考",p:0.05}],
+                [{t:"，",p:0.40},{t:"。",p:0.25},{t:"和",p:0.15},{t:"在",p:0.10},{t:"是",p:0.06},{t:"也",p:0.04}],
+                [{t:"从",p:0.28},{t:"它",p:0.22},{t:"这",p:0.18},{t:"让",p:0.15},{t:"使",p:0.10},{t:"将",p:0.07}],
+                [{t:"医疗",p:0.25},{t:"教育",p:0.22},{t:"金融",p:0.18},{t:"科技",p:0.15},{t:"交通",p:0.12},{t:"农业",p:0.08}],
+                [{t:"到",p:0.35},{t:"、",p:0.25},{t:"和",p:0.20},{t:"至",p:0.10},{t:"以及",p:0.06},{t:"再",p:0.04}],
+                [{t:"教育",p:0.30},{t:"金融",p:0.22},{t:"科技",p:0.18},{t:"制造",p:0.12},{t:"娱乐",p:0.10},{t:"农业",p:0.08}],
+                [{t:"，",p:0.38},{t:"。",p:0.22},{t:"和",p:0.18},{t:"到",p:0.12},{t:"再",p:0.06},{t:"乃至",p:0.04}],
+                [{t:"无处",p:0.30},{t:"影响",p:0.22},{t:"渗透",p:0.18},{t:"深入",p:0.15},{t:"覆盖",p:0.10},{t:"改变",p:0.05}],
+                [{t:"不在",p:0.40},{t:"不在",p:0.25},{t:"不在",p:0.15},{t:"不在",p:0.10},{t:"不在",p:0.06},{t:"不在",p:0.04}],
+                [{t:"。",p:0.55},{t:"！",p:0.20},{t:"...",p:0.10},{t:"；",p:0.08},{t："——",p:0.04},{t:"：",p:0.03}],
+            ]
+        },
+        "Web3 的核心": {
+            tokens: ["Web3", "的", "核心", "是", "去中心化", "，", "让", "用户", "真正", "拥有", "自己", "的", "数据", "和", "资产", "。"],
+            candidates: [
+                [{t:"是",p:0.35},{t:"在于",p:0.28},{t:"理念",p:0.15},{t:"技术",p:0.12},{t:"目标",p:0.06},{t:"价值",p:0.04}],
+                [{t:"去中心化",p:0.32},{t:"区块链",p:0.25},{t:"透明",p:0.18},{t:"开放",p:0.12},{t:"自由",p:0.08},{t:"安全",p:0.05}],
+                [{t:"，",p:0.42},{t:"。",p:0.22},{t:"和",p:0.15},{t："——",p:0.10},{t:"是",p:0.07},{t:"即",p:0.04}],
+                [{t:"让",p:0.30},{t:"使",p:0.25},{t:"它",p:0.18},{t:"这",p:0.12},{t:"将",p:0.10},{t:"目的",p:0.05}],
+                [{t:"用户",p:0.35},{t:"每个人",p:0.22},{t:"人们",p:0.18},{t:"参与者",p:0.12},{t:"所有人",p:0.08},{t:"开发者",p:0.05}],
+                [{t:"真正",p:0.28},{t:"能够",p:0.25},{t:"可以",p:0.20},{t:"完全",p:0.12},{t:"直接",p:0.10},{t:"自主",p:0.05}],
+                [{t:"拥有",p:0.32},{t:"控制",p:0.25},{t:"管理",p:0.18},{t:"掌握",p:0.12},{t:"保护",p:0.08},{t:"支配",p:0.05}],
+                [{t:"自己",p:0.38},{t:"个人",p:0.22},{t:"私有",p:0.18},{t:"链上",p:0.10},{t:"数字",p:0.07},{t:"全部",p:0.05}],
+                [{t:"的",p:0.50},{t:"所",p:0.18},{t:"拥有",p:0.12},{t:"名下",p:0.10},{t:"手中",p:0.06},{t:"账户",p:0.04}],
+                [{t:"数据",p:0.35},{t:"资产",p:0.25},{t:"身份",p:0.18},{t:"信息",p:0.10},{t:"隐私",p:0.07},{t:"权利",p:0.05}],
+                [{t:"和",p:0.40},{t:"、",p:0.25},{t:"以及",p:0.15},{t:"与",p:0.10},{t:"还有",p:0.06},{t:"乃至",p:0.04}],
+                [{t:"资产",p:0.32},{t:"数据",p:0.25},{t:"身份",p:0.18},{t:"隐私",p:0.12},{t:"价值",p:0.08},{t:"权利",p:0.05}],
+                [{t:"。",p:0.50},{t:"！",p:0.22},{t:"...",p:0.12},{t:"；",p:0.08},{t:"——",p:0.05},{t:"：",p:0.03}],
+            ]
+        }
+    };
+
+    let currentSeq = null;
+    let currentStep = 0;
+    let generatedTokens = [];
+    let isAuto = false;
+    let autoTimer = null;
+
+    function getSequence() {
+        const input = document.getElementById('promptInput').value.trim();
+        for (const key of Object.keys(sequences)) {
+            if (input.startsWith(key) || key.startsWith(input)) return sequences[key];
+        }
+        return sequences["AI 将改变"];
+    }
+
+    function startGeneration() {
+        currentSeq = getSequence();
+        currentStep = 0;
+        generatedTokens = [];
+        document.getElementById('output').innerHTML = '';
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('stepBtn').disabled = false;
+        document.getElementById('autoBtn').disabled = false;
+        renderOutput();
+        showCandidates();
+    }
+
+    function stepGeneration() {
+        if (!currentSeq || currentStep >= currentSeq.tokens.length) {
+            stopAuto();
+            document.getElementById('stepBtn').disabled = true;
+            document.getElementById('autoBtn').disabled = true;
+            document.getElementById('startBtn').disabled = false;
+            return;
+        }
+        const token = currentSeq.tokens[currentStep];
+        generatedTokens.push(token);
+        currentStep++;
+        renderOutput();
+        showCandidates();
+        document.getElementById('tokenCount').textContent = currentStep;
+    }
+
+    function renderOutput() {
+        const output = document.getElementById('output');
+        const prompt = document.getElementById('promptInput').value.trim();
+        let html = `<span style="color:#888">${prompt}</span> `;
+        generatedTokens.forEach((t, i) => {
+            const cls = i === generatedTokens.length - 1 ? 'current' : 'done';
+            html += `<span class="token ${cls}">${t}</span>`;
+        });
+        if (currentStep < currentSeq.tokens.length) {
+            html += `<span style="color:#feca57;animation:blink 1s infinite">▌</span>`;
+        }
+        output.innerHTML = html;
+    }
+
+    function showCandidates() {
+        const el = document.getElementById('candidates');
+        if (!currentSeq || currentStep >= currentSeq.candidates.length) {
+            el.innerHTML = '<span style="color:#666">生成完成</span>';
+            return;
+        }
+        const cands = currentSeq.candidates[currentStep];
+        const selected = currentSeq.tokens[currentStep];
+        const maxP = Math.max(...cands.map(c => c.p));
+        let html = '';
+        cands.forEach(c => {
+            const isSel = c.t === selected;
+            const width = (c.p / maxP * 100).toFixed(0);
+            html += `<div class="candidate-row">
+                <span class="candidate-token">${c.t}</span>
+                <div class="bar-bg"><div class="bar-fill ${isSel ? 'selected' : 'other'}" style="width:${width}%"></div></div>
+                <span class="prob">${(c.p * 100).toFixed(1)}%</span>
+            </div>`;
+        });
+        el.innerHTML = html;
+        const totalProb = cands.find(c => c.t === selected)?.p || 0;
+        document.getElementById('totalProb').textContent = (totalProb * 100).toFixed(1) + '%';
+    }
+
+    function toggleAuto() {
+        if (isAuto) { stopAuto(); } else { startAuto(); }
+    }
+
+    function startAuto() {
+        isAuto = true;
+        document.getElementById('autoBtn').textContent = '暂停';
+        document.getElementById('autoBtn').classList.add('active');
+        document.getElementById('stepBtn').disabled = true;
+        const speed = document.getElementById('speedSlider').value;
+        autoTimer = setInterval(() => { stepGeneration(); }, parseInt(speed));
+    }
+
+    function stopAuto() {
+        isAuto = false;
+        clearInterval(autoTimer);
+        document.getElementById('autoBtn').textContent = '自动播放';
+        document.getElementById('autoBtn').classList.remove('active');
+        if (currentStep < currentSeq?.tokens.length) {
+            document.getElementById('stepBtn').disabled = false;
+        }
+    }
+
+    function reset() {
+        stopAuto();
+        currentSeq = null;
+        currentStep = 0;
+        generatedTokens = [];
+        document.getElementById('output').innerHTML = '<span style="color:#666">点击"开始生成"查看效果...</span>';
+        document.getElementById('candidates').innerHTML = '<span style="color:#666">等待生成...</span>';
+        document.getElementById('tokenCount').textContent = '0';
+        document.getElementById('totalProb').textContent = '-';
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('stepBtn').disabled = true;
+        document.getElementById('autoBtn').disabled = true;
+    }
+
+    document.getElementById('speedSlider').addEventListener('input', function() {
+        document.getElementById('speedLabel').textContent = this.value + 'ms';
+        if (isAuto) {
+            clearInterval(autoTimer);
+            autoTimer = setInterval(() => { stepGeneration(); }, parseInt(this.value));
+        }
+    });
+    </script>
+    <style>@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }</style>
+</body>
+</html>

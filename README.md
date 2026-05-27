@@ -88,6 +88,38 @@
 | `week1/prompts/learning-agent-prompt.md` | Agent 使用记录 |
 | `week1/logs/agent-session-01.md` | Agent 学习日志 |
 | `week1/demos/web3-concept-quiz.html` | Web3 概念测验（可交互） |
+| `week1/notes/concept-chain.md` | AI × Web3 概念串联 |
+| `week1/notes/crossover-experiment-record.md` | 交叉实验记录 |
+| `week1/demos/llm-token-visualizer.html` | LLM Token 生成可视化（高级挑战产物） |
+
+## 可交互产物说明
+
+### 产物 1：Web3 概念测验 (`web3-concept-quiz.html`)
+
+- **选择的概念**：Web3 基础（钱包、签名、Gas、合约、测试网）
+- **Agent 做了什么**：生成完整的 HTML/CSS/JS 测验页面，包含 10 道选择题、答案解释、计分系统
+- **人工修改了什么**：无，Agent 一次生成即使用
+- **不可靠的输出**：题目和解释基于训练数据，可能不是最新的链上状态；Gas 数值会随网络变化
+- **改进方向**：增加更多题目、添加难度分级、接入链上实时数据
+
+### 产物 2：LLM Token 生成可视化 (`llm-token-visualizer.html`) — 高级挑战
+
+- **选择的概念**：LLM 基本工作方式（Token 预测）
+- **Agent 做了什么**：生成交互式可视化页面，模拟 LLM 逐 token 生成的过程
+- **工具对比**：此产物由 Claude Code 生成；高级挑战中同时使用了 Codex 生成同题产物用于对比
+- **不可靠的输出**：token 概率是模拟数据，不是真实模型输出
+- **改进方向**：接入真实 LLM API 显示实际 token 概率
+
+## 高级挑战：工具对比（Claude Code vs Codex）
+
+| 维度 | Claude Code | Codex |
+|------|-------------|-------|
+| 代码生成质量 | 一次生成可用，UI 细节到位 | 需要多轮调整 |
+| 上下文保持 | 能读取整个 repo 结构，理解学习计划上下文 | 每次对话独立，需重新描述背景 |
+| 工具调用 | 直接读写文件、执行 git、搜索代码 | 主要生成代码，需手动操作 |
+| 长期记录 | 自动维护 memory、task list | 需手动整理 |
+
+详细对比记录见 `week1/notes/tool-comparison.md`
 
 ## 隐私提醒
 
