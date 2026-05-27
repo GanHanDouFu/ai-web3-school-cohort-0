@@ -4,172 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI × Web3 学习仪表盘</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #08080c;
-            --surface: #0e0e14;
-            --surface-raised: #14141e;
-            --border: #1a1a2a;
-            --border-glow: #1e2a3a;
-            --text: #c8c8d4;
-            --text-dim: #5a5a72;
-            --text-bright: #eeeef4;
-            --cyan: #00e5ff;
-            --cyan-dim: rgba(0,229,255,0.12);
-            --magenta: #ff2d78;
-            --magenta-dim: rgba(255,45,120,0.12);
-            --amber: #ffb020;
-            --amber-dim: rgba(255,176,32,0.12);
-            --green: #00e676;
-            --green-dim: rgba(0,230,118,0.12);
-            --purple: #9c5cff;
-            --purple-dim: rgba(156,92,255,0.12);
+            --dark: #141413;
+            --light: #faf9f5;
+            --mid-gray: #b0aea5;
+            --light-gray: #e8e6dc;
+            --orange: #d97757;
+            --blue: #6a9bcc;
+            --green: #788c5d;
+            --bg: #1a1a18;
+            --surface: #222220;
+            --surface-raised: #2a2a28;
+            --border: #333330;
+            --text: #c8c6bc;
+            --text-dim: #7a7870;
+            --text-bright: #faf9f5;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Lora', Georgia, serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
-            overflow-x: hidden;
+            line-height: 1.6;
         }
-        /* Scanline overlay */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0,0,0,0.03) 2px,
-                rgba(0,0,0,0.03) 4px
-            );
-            pointer-events: none;
-            z-index: 9999;
-        }
-        /* Noise texture */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            opacity: 0.015;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 9998;
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', Arial, sans-serif;
         }
 
         /* Header */
         .header {
-            position: relative;
-            padding: 60px 24px 40px;
+            padding: 48px 24px 36px;
             text-align: center;
-            overflow: hidden;
-        }
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 800px;
-            height: 400px;
-            background: radial-gradient(ellipse, rgba(0,229,255,0.06) 0%, transparent 70%);
-            pointer-events: none;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(217,119,87,0.04), transparent);
         }
         .header-tag {
             display: inline-block;
-            padding: 4px 14px;
-            border: 1px solid var(--cyan);
-            color: var(--cyan);
+            padding: 4px 16px;
+            border: 1px solid var(--orange);
+            color: var(--orange);
+            font-family: 'Poppins', Arial, sans-serif;
             font-size: 0.65em;
-            letter-spacing: 3px;
+            font-weight: 600;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 20px;
-            animation: tagFlicker 4s infinite;
-        }
-        @keyframes tagFlicker {
-            0%,95%,100% { opacity: 1; }
-            96% { opacity: 0.4; }
-            97% { opacity: 1; }
-            98% { opacity: 0.6; }
+            margin-bottom: 16px;
         }
         .header h1 {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 900;
-            font-size: clamp(2em, 5vw, 3.5em);
-            letter-spacing: -2px;
-            line-height: 1.1;
-            color: var(--text-bright);
-            margin-bottom: 12px;
+            font-size: clamp(1.8em, 4vw, 2.8em);
+            font-weight: 700;
+            color: var(--light);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
-        .header h1 .ai { color: var(--cyan); }
-        .header h1 .x { color: var(--text-dim); font-weight: 300; }
-        .header h1 .web3 { color: var(--magenta); }
+        .header h1 .ai { color: var(--orange); }
+        .header h1 .x { color: var(--mid-gray); font-weight: 400; }
+        .header h1 .web3 { color: var(--blue); }
         .header p {
-            color: var(--text-dim);
-            font-size: 0.8em;
-            letter-spacing: 1px;
+            color: var(--mid-gray);
+            font-size: 0.85em;
+            font-family: 'Lora', Georgia, serif;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
 
-        /* Workflow Pipeline */
-        .pipeline {
-            position: relative;
+        /* Workflow */
+        .workflow {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0;
-            margin: 20px 0 40px;
+            margin: 28px 0 36px;
             flex-wrap: wrap;
-            padding: 24px 0;
         }
-        .pipeline::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 10%;
-            right: 10%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
-        }
-        .pipe-node {
-            position: relative;
-            z-index: 1;
+        .wf-node {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 8px;
-            padding: 14px 18px;
+            padding: 14px 20px;
             background: var(--surface);
             border: 1px solid var(--border);
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-            min-width: 110px;
+            transition: all 0.25s ease;
+            min-width: 100px;
         }
-        .pipe-node:hover, .pipe-node.active {
-            border-color: var(--cyan);
-            background: var(--cyan-dim);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 32px rgba(0,229,255,0.1), 0 0 0 1px var(--cyan);
+        .wf-node:hover, .wf-node.active {
+            border-color: var(--orange);
+            background: rgba(217,119,87,0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(217,119,87,0.08);
         }
-        .pipe-node .p-icon { font-size: 1.4em; }
-        .pipe-node .p-label {
-            font-size: 0.65em;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+        .wf-node .wf-icon { font-size: 1.3em; }
+        .wf-node .wf-label {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 0.7em;
+            font-weight: 600;
             color: var(--text-dim);
+            letter-spacing: 0.5px;
         }
-        .pipe-node.active .p-label { color: var(--cyan); }
-        .pipe-arrow {
-            color: var(--text-dim);
-            font-size: 0.8em;
+        .wf-node.active .wf-label { color: var(--orange); }
+        .wf-arrow {
+            color: var(--border);
+            font-size: 0.9em;
             padding: 0 6px;
-            opacity: 0.3;
         }
 
         /* Grid */
@@ -185,49 +127,40 @@
         .card {
             background: var(--surface);
             border: 1px solid var(--border);
-            padding: 0;
-            position: relative;
+            border-radius: 10px;
             overflow: hidden;
+            transition: border-color 0.2s;
         }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 2px;
-            background: linear-gradient(90deg, var(--cyan), var(--magenta));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .card:hover::before { opacity: 1; }
+        .card:hover { border-color: var(--text-dim); }
         .card-head {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 16px 20px 12px;
-            border-bottom: 1px solid var(--border);
         }
         .card-head .dot {
-            width: 6px; height: 6px;
+            width: 8px; height: 8px;
             border-radius: 50%;
         }
-        .card-head .dot.cyan { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
-        .card-head .dot.magenta { background: var(--magenta); box-shadow: 0 0 8px var(--magenta); }
-        .card-head .dot.amber { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
-        .card-head .dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
-        .card-head .dot.purple { background: var(--purple); box-shadow: 0 0 8px var(--purple); }
+        .card-head .dot.orange { background: var(--orange); }
+        .card-head .dot.blue { background: var(--blue); }
+        .card-head .dot.green { background: var(--green); }
         .card-title {
-            font-size: 0.7em;
-            letter-spacing: 2px;
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            color: var(--text-dim);
+            color: var(--mid-gray);
         }
         .card-body { padding: 20px; }
         .card.full { grid-column: 1 / -1; }
 
-        /* AI Terminal */
+        /* AI Input */
         .ai-input-wrap {
             position: relative;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
         .ai-input-wrap::before {
             content: '>';
@@ -235,29 +168,32 @@
             left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--cyan);
-            font-weight: 700;
-            font-size: 0.9em;
+            color: var(--orange);
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
         }
         .ai-input {
             width: 100%;
-            padding: 12px 16px 12px 32px;
-            background: var(--bg);
+            padding: 12px 16px 12px 30px;
+            background: var(--dark);
             border: 1px solid var(--border);
-            color: var(--text-bright);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85em;
+            border-radius: 6px;
+            color: var(--light);
+            font-family: 'Lora', Georgia, serif;
+            font-size: 0.9em;
             transition: border-color 0.2s;
         }
-        .ai-input:focus { outline: none; border-color: var(--cyan); }
+        .ai-input:focus { outline: none; border-color: var(--orange); }
         .ai-output {
-            background: var(--bg);
+            background: var(--dark);
             border: 1px solid var(--border);
+            border-radius: 6px;
             padding: 16px;
-            font-size: 0.78em;
+            font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+            font-size: 0.82em;
             line-height: 1.7;
-            min-height: 140px;
-            max-height: 300px;
+            min-height: 130px;
+            max-height: 280px;
             overflow-y: auto;
             white-space: pre-wrap;
             color: var(--text);
@@ -266,49 +202,38 @@
             display: inline-block;
             width: 7px;
             height: 14px;
-            background: var(--cyan);
+            background: var(--orange);
             animation: blink 0.8s step-end infinite;
             vertical-align: middle;
         }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-        .ai-output::-webkit-scrollbar { width: 4px; }
-        .ai-output::-webkit-scrollbar-track { background: var(--bg); }
-        .ai-output::-webkit-scrollbar-thumb { background: var(--border); }
+        .ai-output::-webkit-scrollbar { width: 5px; }
+        .ai-output::-webkit-scrollbar-track { background: var(--dark); }
+        .ai-output::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
         /* Buttons */
         .btn-row { display: flex; gap: 8px; margin-top: 14px; }
         .btn {
-            padding: 10px 18px;
+            padding: 9px 18px;
             border: 1px solid var(--border);
-            background: var(--surface);
+            border-radius: 6px;
+            background: var(--surface-raised);
             color: var(--text);
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Poppins', Arial, sans-serif;
             font-size: 0.75em;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             cursor: pointer;
             transition: all 0.2s;
-            position: relative;
-            overflow: hidden;
         }
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: left 0.4s;
-        }
-        .btn:hover::after { left: 100%; }
-        .btn:hover { border-color: var(--text-dim); color: var(--text-bright); }
+        .btn:hover { border-color: var(--mid-gray); color: var(--light); }
         .btn.primary {
-            background: var(--cyan);
-            color: var(--bg);
-            border-color: var(--cyan);
+            background: var(--orange);
+            color: var(--dark);
+            border-color: var(--orange);
             font-weight: 700;
         }
-        .btn.primary:hover { background: #33eaff; box-shadow: 0 0 20px rgba(0,229,255,0.3); }
-        .btn.primary::after { display: none; }
+        .btn.primary:hover { background: #e08a6a; box-shadow: 0 2px 12px rgba(217,119,87,0.25); }
 
         /* Chain Status */
         .chain-bar {
@@ -316,18 +241,19 @@
             align-items: center;
             gap: 10px;
             padding: 10px 14px;
-            background: var(--green-dim);
-            border: 1px solid rgba(0,230,118,0.15);
+            background: rgba(120,140,93,0.08);
+            border: 1px solid rgba(120,140,93,0.15);
+            border-radius: 6px;
             margin-bottom: 16px;
-            font-size: 0.78em;
+            font-size: 0.82em;
         }
         .chain-pulse {
-            width: 6px; height: 6px;
+            width: 7px; height: 7px;
             background: var(--green);
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
-        @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,230,118,0.4)} 50%{box-shadow:0 0 0 6px rgba(0,230,118,0)} }
+        @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(120,140,93,0.4)} 50%{box-shadow:0 0 0 5px rgba(120,140,93,0)} }
         .chain-bar strong { color: var(--green); }
 
         /* Contract Functions */
@@ -337,72 +263,78 @@
             gap: 8px;
             margin-bottom: 10px;
         }
-        .fn-name { color: var(--cyan); font-size: 0.85em; white-space: nowrap; }
+        .fn-name { color: var(--blue); font-family: monospace; font-size: 0.88em; white-space: nowrap; }
         .fn-input {
             flex: 1;
             padding: 10px 12px;
-            background: var(--bg);
+            background: var(--dark);
             border: 1px solid var(--border);
-            color: var(--text-bright);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85em;
+            border-radius: 6px;
+            color: var(--light);
+            font-family: monospace;
+            font-size: 0.88em;
         }
-        .fn-input:focus { outline: none; border-color: var(--cyan); }
+        .fn-input:focus { outline: none; border-color: var(--blue); }
         .result-box {
             margin-top: 12px;
             padding: 14px;
-            background: var(--bg);
+            background: var(--dark);
             border: 1px solid var(--border);
-            font-size: 0.8em;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.82em;
             line-height: 1.8;
             display: none;
             animation: fadeSlide 0.3s ease;
         }
         .result-box.show { display: block; }
-        @keyframes fadeSlide { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
 
-        /* Execution Log */
-        .log-list { max-height: 260px; overflow-y: auto; }
-        .log-list::-webkit-scrollbar { width: 3px; }
-        .log-list::-webkit-scrollbar-thumb { background: var(--border); }
+        /* Log */
+        .log-list { max-height: 240px; overflow-y: auto; }
+        .log-list::-webkit-scrollbar { width: 4px; }
+        .log-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
         .log-item {
             display: flex;
             align-items: flex-start;
             gap: 10px;
-            padding: 10px 0;
+            padding: 9px 0;
             border-bottom: 1px solid var(--border);
-            font-size: 0.78em;
+            font-size: 0.82em;
             animation: logIn 0.3s ease;
         }
-        @keyframes logIn { from { opacity:0; transform:translateX(-10px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes logIn { from { opacity:0; transform:translateX(-8px); } to { opacity:1; transform:translateX(0); } }
         .log-item:last-child { border-bottom: none; }
         .log-badge {
             padding: 2px 8px;
-            font-size: 0.7em;
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 0.65em;
+            font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
+            border-radius: 4px;
             white-space: nowrap;
             flex-shrink: 0;
         }
-        .log-badge.ai { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(156,92,255,0.2); }
-        .log-badge.web3 { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(0,229,255,0.2); }
-        .log-badge.human { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(255,176,32,0.2); }
-        .log-time { color: var(--text-dim); flex-shrink: 0; }
+        .log-badge.ai { background: rgba(217,119,87,0.12); color: var(--orange); border: 1px solid rgba(217,119,87,0.2); }
+        .log-badge.web3 { background: rgba(106,155,204,0.12); color: var(--blue); border: 1px solid rgba(106,155,204,0.2); }
+        .log-badge.human { background: rgba(120,140,93,0.12); color: var(--green); border: 1px solid rgba(120,140,93,0.2); }
+        .log-time { color: var(--text-dim); flex-shrink: 0; font-family: monospace; font-size: 0.9em; }
         .log-text { color: var(--text); }
 
-        /* Risk Checks */
+        /* Risk */
         .risk-item {
             display: flex;
             align-items: center;
             gap: 10px;
             padding: 10px 0;
             border-bottom: 1px solid var(--border);
-            font-size: 0.8em;
+            font-size: 0.85em;
         }
         .risk-item:last-child { border-bottom: none; }
-        .risk-icon { font-size: 0.9em; flex-shrink: 0; }
+        .risk-icon { font-size: 0.9em; flex-shrink: 0; width: 16px; text-align: center; }
         .risk-icon.pass { color: var(--green); }
-        .risk-icon.warn { color: var(--amber); }
+        .risk-icon.warn { color: var(--orange); }
 
         /* Concept Grid */
         .concept-grid {
@@ -413,39 +345,42 @@
         @media (max-width: 600px) { .concept-grid { grid-template-columns: 1fr 1fr; } }
         .concept-tile {
             padding: 16px 12px;
-            background: var(--bg);
+            background: var(--dark);
             border: 1px solid var(--border);
+            border-radius: 8px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative;
+            transition: all 0.25s ease;
         }
-        .concept-tile::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 3px; height: 100%;
-        }
-        .concept-tile.ai::before { background: var(--purple); }
-        .concept-tile.web3::before { background: var(--cyan); }
-        .concept-tile.cross::before { background: var(--magenta); }
         .concept-tile:hover {
-            border-color: var(--text-dim);
+            border-color: var(--mid-gray);
             transform: translateY(-2px);
         }
-        .concept-tile.ai:hover { background: var(--purple-dim); border-color: var(--purple); }
-        .concept-tile.web3:hover { background: var(--cyan-dim); border-color: var(--cyan); }
-        .concept-tile.cross:hover { background: var(--magenta-dim); border-color: var(--magenta); }
-        .concept-tile .ct-icon { font-size: 1.4em; margin-bottom: 6px; }
-        .concept-tile .ct-name { font-size: 0.78em; color: var(--text); letter-spacing: 1px; }
-        .concept-tile .ct-cat { font-size: 0.6em; color: var(--text-dim); margin-top: 4px; text-transform: uppercase; letter-spacing: 2px; }
+        .concept-tile.ai:hover { border-color: var(--orange); background: rgba(217,119,87,0.06); }
+        .concept-tile.web3:hover { border-color: var(--blue); background: rgba(106,155,204,0.06); }
+        .concept-tile.cross:hover { border-color: var(--green); background: rgba(120,140,93,0.06); }
+        .concept-tile .ct-icon { font-size: 1.3em; margin-bottom: 6px; }
+        .concept-tile .ct-name {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 0.78em;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .concept-tile .ct-cat {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 0.6em;
+            color: var(--text-dim);
+            margin-top: 3px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-        /* Explain Panel */
+        /* Panel */
         .panel-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(20,20,19,0.7);
             backdrop-filter: blur(4px);
             opacity: 0;
             pointer-events: none;
@@ -461,9 +396,8 @@
             height: 100vh;
             background: var(--surface);
             border-left: 1px solid var(--border);
-            padding: 0;
             transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
             overflow-y: auto;
             z-index: 101;
         }
@@ -474,67 +408,71 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 20px 24px;
+            padding: 18px 24px;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             z-index: 1;
         }
         .panel-head h3 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.1em;
-            color: var(--text-bright);
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--light);
         }
         .panel-close {
-            width: 32px; height: 32px;
+            width: 30px; height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: none;
             border: 1px solid var(--border);
+            border-radius: 6px;
             color: var(--text-dim);
             cursor: pointer;
-            font-size: 1em;
+            font-size: 0.9em;
             transition: all 0.2s;
         }
-        .panel-close:hover { border-color: var(--magenta); color: var(--magenta); }
+        .panel-close:hover { border-color: var(--orange); color: var(--orange); }
         .panel-content { padding: 24px; }
         .panel-content p {
             color: var(--text);
             line-height: 1.8;
-            font-size: 0.85em;
+            font-size: 0.9em;
             margin-bottom: 14px;
         }
-        .panel-content strong { color: var(--text-bright); }
+        .panel-content strong { color: var(--light); }
         .panel-content code {
-            background: var(--bg);
+            background: var(--dark);
             padding: 2px 8px;
             font-size: 0.85em;
-            color: var(--cyan);
+            color: var(--blue);
             border: 1px solid var(--border);
+            border-radius: 4px;
         }
-        .panel-content a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid transparent; }
-        .panel-content a:hover { border-bottom-color: var(--cyan); }
+        .panel-content a { color: var(--orange); text-decoration: none; }
+        .panel-content a:hover { text-decoration: underline; }
 
         /* Footer */
         .footer {
             text-align: center;
-            padding: 40px 24px;
+            padding: 36px 24px;
             color: var(--text-dim);
+            font-family: 'Poppins', Arial, sans-serif;
             font-size: 0.7em;
+            font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
             border-top: 1px solid var(--border);
-            margin-top: 20px;
         }
 
-        /* Staggered entrance animation */
-        .card, .pipeline { animation: enter 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
-        .card:nth-child(1) { animation-delay: 0.1s; }
-        .card:nth-child(2) { animation-delay: 0.2s; }
-        .card:nth-child(3) { animation-delay: 0.3s; }
-        .card:nth-child(4) { animation-delay: 0.4s; }
-        .card:nth-child(5) { animation-delay: 0.5s; }
-        @keyframes enter { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        /* Entrance */
+        .card, .workflow { animation: enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .card:nth-child(1) { animation-delay: 0.05s; }
+        .card:nth-child(2) { animation-delay: 0.1s; }
+        .card:nth-child(3) { animation-delay: 0.15s; }
+        .card:nth-child(4) { animation-delay: 0.2s; }
+        .card:nth-child(5) { animation-delay: 0.25s; }
+        @keyframes enter { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
     </style>
 </head>
 <body>
@@ -547,51 +485,26 @@
 
 <div class="container">
 
-    <!-- Workflow Pipeline -->
-    <div class="pipeline" id="workflow">
-        <div class="pipe-node" onclick="explain('prompt')" data-step="1">
-            <span class="p-icon">💬</span>
-            <span class="p-label">Prompt</span>
-        </div>
-        <span class="pipe-arrow">▸</span>
-        <div class="pipe-node" onclick="explain('llm')" data-step="2">
-            <span class="p-icon">🧠</span>
-            <span class="p-label">LLM 生成</span>
-        </div>
-        <span class="pipe-arrow">▸</span>
-        <div class="pipe-node" onclick="explain('review')" data-step="3">
-            <span class="p-icon">👁</span>
-            <span class="p-label">人工复核</span>
-        </div>
-        <span class="pipe-arrow">▸</span>
-        <div class="pipe-node" onclick="explain('wallet')" data-step="4">
-            <span class="p-icon">🔑</span>
-            <span class="p-label">钱包签名</span>
-        </div>
-        <span class="pipe-arrow">▸</span>
-        <div class="pipe-node" onclick="explain('chain')" data-step="5">
-            <span class="p-icon">⛓</span>
-            <span class="p-label">链上执行</span>
-        </div>
-        <span class="pipe-arrow">▸</span>
-        <div class="pipe-node" onclick="explain('verify')" data-step="6">
-            <span class="p-icon">✓</span>
-            <span class="p-label">验证结果</span>
-        </div>
+    <div class="workflow" id="workflow">
+        <div class="wf-node" onclick="explain('prompt')" data-step="1"><span class="wf-icon">💬</span><span class="wf-label">Prompt</span></div>
+        <span class="wf-arrow">→</span>
+        <div class="wf-node" onclick="explain('llm')" data-step="2"><span class="wf-icon">🧠</span><span class="wf-label">LLM 生成</span></div>
+        <span class="wf-arrow">→</span>
+        <div class="wf-node" onclick="explain('review')" data-step="3"><span class="wf-icon">👁</span><span class="wf-label">人工复核</span></div>
+        <span class="wf-arrow">→</span>
+        <div class="wf-node" onclick="explain('wallet')" data-step="4"><span class="wf-icon">🔑</span><span class="wf-label">钱包签名</span></div>
+        <span class="wf-arrow">→</span>
+        <div class="wf-node" onclick="explain('chain')" data-step="5"><span class="wf-icon">⛓</span><span class="wf-label">链上执行</span></div>
+        <span class="wf-arrow">→</span>
+        <div class="wf-node" onclick="explain('verify')" data-step="6"><span class="wf-icon">✓</span><span class="wf-label">验证结果</span></div>
     </div>
 
     <div class="grid">
 
-        <!-- AI Generate -->
         <div class="card">
-            <div class="card-head">
-                <span class="dot purple"></span>
-                <span class="card-title">AI 生成合约代码</span>
-            </div>
+            <div class="card-head"><span class="dot orange"></span><span class="card-title">AI 生成合约代码</span></div>
             <div class="card-body">
-                <div class="ai-input-wrap">
-                    <input class="ai-input" id="aiPrompt" placeholder="描述你想要的合约功能..." value="一个存储数字的简单合约">
-                </div>
+                <div class="ai-input-wrap"><input class="ai-input" id="aiPrompt" placeholder="描述你想要的合约功能..." value="一个存储数字的简单合约"></div>
                 <div class="ai-output" id="aiOutput"><span style="color:var(--text-dim)">点击 [AI 生成] 让 LLM 写合约代码...</span></div>
                 <div class="btn-row">
                     <button class="btn primary" onclick="aiGenerate()">AI 生成</button>
@@ -600,20 +513,11 @@
             </div>
         </div>
 
-        <!-- Chain Interaction -->
         <div class="card">
-            <div class="card-head">
-                <span class="dot cyan"></span>
-                <span class="card-title">链上合约交互</span>
-            </div>
+            <div class="card-head"><span class="dot blue"></span><span class="card-title">链上合约交互</span></div>
             <div class="card-body">
-                <div class="chain-bar">
-                    <span class="chain-pulse"></span>
-                    <span>已连接 <strong>Sepolia</strong> 测试网</span>
-                </div>
-                <div style="font-size:0.75em;color:var(--text-dim);margin-bottom:16px;">
-                    合约 <code style="color:var(--cyan)">0x8df9...b1e8</code>
-                </div>
+                <div class="chain-bar"><span class="chain-pulse"></span><span>已连接 <strong>Sepolia</strong> 测试网</span></div>
+                <div style="font-size:0.8em;color:var(--text-dim);margin-bottom:14px;">合约 <code style="color:var(--blue)">0x8df9...b1e8</code></div>
                 <div class="fn-row">
                     <span class="fn-name">set(</span>
                     <input class="fn-input" id="setInput" type="number" placeholder="42" value="42">
@@ -628,12 +532,8 @@
             </div>
         </div>
 
-        <!-- Execution Log -->
         <div class="card">
-            <div class="card-head">
-                <span class="dot amber"></span>
-                <span class="card-title">执行日志 — 谁做了什么</span>
-            </div>
+            <div class="card-head"><span class="dot green"></span><span class="card-title">执行日志 — 谁做了什么</span></div>
             <div class="card-body">
                 <div class="log-list" id="execLog">
                     <div class="log-item"><span class="log-badge ai">AI</span><span class="log-time">09:00</span><span class="log-text">生成 SimpleStorage 合约代码</span></div>
@@ -644,12 +544,8 @@
             </div>
         </div>
 
-        <!-- Risk & Boundary -->
         <div class="card">
-            <div class="card-head">
-                <span class="dot green"></span>
-                <span class="card-title">风险与边界检查</span>
-            </div>
+            <div class="card-head"><span class="dot orange"></span><span class="card-title">风险与边界检查</span></div>
             <div class="card-body">
                 <div class="risk-item"><span class="risk-icon pass">✓</span> AI 生成的代码已编译验证</div>
                 <div class="risk-item"><span class="risk-icon pass">✓</span> 合约无重入漏洞（无外部调用）</div>
@@ -659,12 +555,8 @@
             </div>
         </div>
 
-        <!-- Concept Map -->
         <div class="card full">
-            <div class="card-head">
-                <span class="dot magenta"></span>
-                <span class="card-title">概念地图 — AI × Web3 核心概念</span>
-            </div>
+            <div class="card-head"><span class="dot blue"></span><span class="card-title">概念地图 — AI × Web3 核心概念</span></div>
             <div class="card-body">
                 <div class="concept-grid">
                     <div class="concept-tile ai" onclick="explain('llm')"><div class="ct-icon">🧠</div><div class="ct-name">LLM</div><div class="ct-cat">AI</div></div>
@@ -683,179 +575,50 @@
     </div>
 </div>
 
-<div class="footer">AI × Web3 School · Week 1 · GanHanDouFu</div>
+<div class="footer">AI × Web3 School · Week 1 · Built with Claude Code</div>
 
-<!-- Explain Panel -->
 <div class="panel-overlay" id="panelOverlay" onclick="closeExplain()"></div>
 <div class="explain-panel" id="explainPanel">
-    <div class="panel-head">
-        <h3 id="panelTitle"></h3>
-        <button class="panel-close" onclick="closeExplain()">×</button>
-    </div>
+    <div class="panel-head"><h3 id="panelTitle"></h3><button class="panel-close" onclick="closeExplain()">×</button></div>
     <div class="panel-content" id="explainContent"></div>
 </div>
 
 <script>
 const explanations = {
-    prompt: {
-        title: "Prompt（提示词）",
-        body: `<p>Prompt 是你给 AI 的指令。质量直接决定输出质量。</p>
-<p><strong>在这条链路中的角色</strong>：告诉 AI "帮我写一个存储合约"或"解释这笔交易"。</p>
-<p><strong>好的 Prompt</strong>：具体、有约束、有输出格式要求。</p>
-<p><strong>差的 Prompt</strong>：模糊、无边界、无格式。</p>
-<p><strong>例子</strong>：</p>
-<p>差：写个合约</p>
-<p>好：用 Solidity 0.8+ 写一个存储 uint256 的合约，包含 set/get 函数，添加事件</p>`
-    },
-    llm: {
-        title: "LLM（大语言模型）",
-        body: `<p>LLM 的本质是"下一个词预测器"。给它前面的文字，它算出最可能出现的下一个词。</p>
-<p><strong>类比</strong>：手机输入法联想，但强大几万倍。</p>
-<p><strong>能做</strong>：写代码、解释代码、分析问题、翻译</p>
-<p><strong>不能做</strong>：精确事实记忆、确定性计算、跨会话记忆、获取实时信息</p>
-<p><strong>关键理解</strong>："幻觉"不是 bug，是特性。它会自信地编造看起来合理的信息。</p>`
-    },
-    review: {
-        title: "人工复核",
-        body: `<p>AI 生成的代码必须人工审查后才能使用。</p>
-<p><strong>检查清单</strong>：</p>
-<p>• 逻辑是否正确？<br>• 是否有安全漏洞？（重入、溢出、权限）<br>• 引用的库是否存在？版本对不对？<br>• 边界条件是否处理？<br>• 编译是否通过？</p>
-<p><strong>为什么不能跳过</strong>：AI 可能生成有漏洞的代码。链上合约部署后不可修改。</p>`
-    },
-    wallet: {
-        title: "钱包（Wallet）",
-        body: `<p>钱包 = 私钥管理器 + 签名工具。它不存钱，钱在链上。</p>
-<p><strong>类比</strong>：钱包是钥匙，不是保险箱。</p>
-<p><strong>密钥体系</strong>：助记词 → 私钥 → 公钥 → 地址</p>
-<p><strong>安全底线</strong>：助记词/私钥永不泄露，AI 不应接触私钥，签名前必须人工确认。</p>
-<p><strong>地址</strong>：<code>0xF0cf20f5821fFe917F24532075E2FAC81b580c2e</code></p>`
-    },
-    tx: {
-        title: "交易（Transaction）",
-        body: `<p>交易 = 经过签名的状态变更指令。</p>
-<p><strong>生命周期</strong>：构造 → 签名 → 广播 → mempool → 打包 → 确认</p>
-<p><strong>签名前检查</strong>：To（转给谁）、Value（多少钱）、Data（合约调用参数）、Gas（手续费）</p>
-<p><strong>关键</strong>：签名 = 授权，不是"点确认"。一旦广播，不可撤销。</p>`
-    },
-    contract: {
-        title: "智能合约（Smart Contract）",
-        body: `<p>部署在链上的可执行代码。状态公开、执行透明。</p>
-<p><strong>与后端 API 的区别</strong>：</p>
-<p>• 代码公开 vs 私有<br>• 状态公开 vs 私有数据库<br>• 不可随意修改 vs 随时可改<br>• 每次调用消耗 Gas vs 服务器费用</p>
-<p><strong>我部署的合约</strong>：<code>0x8df998f592de1321b62ee661fc9045c3af29b1e8</code></p>`
-    },
-    gas: {
-        title: "Gas（燃料费）",
-        body: `<p>链上计算的成本单位。</p>
-<p><strong>类比</strong>：开车耗油。路越远，耗油越多。</p>
-<p><strong>计算</strong>：总费用 = Gas Used × Gas Price</p>
-<p><strong>观察</strong>：</p>
-<p>• 普通转账：21,000 Gas<br>• 部署简单合约：~200,000 Gas<br>• L2 比 L1 便宜 10-100 倍</p>`
-    },
-    agent: {
-        title: "Agent（智能体）",
-        body: `<p>能自主规划、调用工具、管理状态的 AI 系统。</p>
-<p><strong>与 Workflow 的区别</strong>：Agent 能根据中间结果动态调整策略，Workflow 路径固定。</p>
-<p><strong>适合场景</strong>：开放式问题、多工具协作、中间结果决定下一步</p>
-<p><strong>不适合</strong>：一次性问答（用 Prompt）、流程固定（用脚本）、高合规要求（用人工审核）</p>`
-    },
-    tooluse: {
-        title: "Tool Use（工具调用）",
-        body: `<p>AI × Web3 的核心连接点。LLM 输出结构化请求，框架执行后回传结果。</p>
-<p><strong>例子</strong>：</p>
-<p>AI 决定"需要查余额" → 调用 RPC <code>eth_getBalance</code> → 返回结果 → AI 继续分析</p>
-<p><strong>Web3 工具</strong>：RPC 查询、钱包签名、合约调用、区块浏览器查询</p>
-<p><strong>关键</strong>：AI 决定"要做什么"，工具负责"怎么做"。</p>`
-    },
-    guardrails: {
-        title: "Guardrails（安全护栏）",
-        body: `<p>AI × Web3 协作中必须有的安全机制。</p>
-<p><strong>规则</strong>：</p>
-<p>• AI 不直接接触私钥<br>• 签名/转账/合约写入必须人工确认<br>• AI 输出的合约代码必须编译+审查<br>• 设置操作限额（每日最大金额）<br>• 所有操作可追溯（日志+链上记录）</p>
-<p><strong>为什么</strong>：链上操作不可撤销，AI 可能被 prompt injection 攻击。</p>`
-    },
-    chain: {
-        title: "链上执行",
-        body: `<p>交易广播到网络后，由验证者打包进区块。</p>
-<p><strong>特点</strong>：</p>
-<p>• 不可撤销：一旦确认无法回滚<br>• 公开透明：所有人都能看到<br>• 需要 Gas：每步操作都有成本<br>• 需要等待：区块确认需要时间</p>
-<p><strong>Sepolia 测试网</strong>：功能与主网相同，但代币无价值。</p>`
-    },
-    verify: {
-        title: "验证结果",
-        body: `<p>在区块浏览器上确认交易状态。</p>
-<p><strong>Etherscan 能查</strong>：</p>
-<p>• 交易状态（Success/Fail）<br>• Gas 消耗<br>• 合约代码<br>• 地址余额和历史</p>
-<p><strong>关键理解</strong>：区块链是公开的，地址是假名不是匿名。</p>
-<p><strong>我的交易</strong>：<a href="https://sepolia.etherscan.io/tx/0x38e6576618bc71ab8ad8c5be9de8563e42ccc2dd02c479e4dac12c68b899d1b0" target="_blank">查看交易</a></p>`
-    }
+    prompt: { title: "Prompt（提示词）", body: `<p>Prompt 是你给 AI 的指令。质量直接决定输出质量。</p><p><strong>在这条链路中的角色</strong>：告诉 AI "帮我写一个存储合约"或"解释这笔交易"。</p><p><strong>好的 Prompt</strong>：具体、有约束、有输出格式要求。</p><p><strong>差的 Prompt</strong>：模糊、无边界、无格式。</p><p><strong>例子</strong>：</p><p>差：写个合约</p><p>好：用 Solidity 0.8+ 写一个存储 uint256 的合约，包含 set/get 函数，添加事件</p>` },
+    llm: { title: "LLM（大语言模型）", body: `<p>LLM 的本质是"下一个词预测器"。给它前面的文字，它算出最可能出现的下一个词。</p><p><strong>类比</strong>：手机输入法联想，但强大几万倍。</p><p><strong>能做</strong>：写代码、解释代码、分析问题、翻译</p><p><strong>不能做</strong>：精确事实记忆、确定性计算、跨会话记忆、获取实时信息</p><p><strong>关键理解</strong>："幻觉"不是 bug，是特性。它会自信地编造看起来合理的信息。</p>` },
+    review: { title: "人工复核", body: `<p>AI 生成的代码必须人工审查后才能使用。</p><p><strong>检查清单</strong>：</p><p>• 逻辑是否正确？<br>• 是否有安全漏洞？（重入、溢出、权限）<br>• 引用的库是否存在？版本对不对？<br>• 边界条件是否处理？<br>• 编译是否通过？</p><p><strong>为什么不能跳过</strong>：AI 可能生成有漏洞的代码。链上合约部署后不可修改。</p>` },
+    wallet: { title: "钱包（Wallet）", body: `<p>钱包 = 私钥管理器 + 签名工具。它不存钱，钱在链上。</p><p><strong>类比</strong>：钱包是钥匙，不是保险箱。</p><p><strong>密钥体系</strong>：助记词 → 私钥 → 公钥 → 地址</p><p><strong>安全底线</strong>：助记词/私钥永不泄露，AI 不应接触私钥，签名前必须人工确认。</p><p><strong>地址</strong>：<code>0xF0cf20f5821fFe917F24532075E2FAC81b580c2e</code></p>` },
+    tx: { title: "交易（Transaction）", body: `<p>交易 = 经过签名的状态变更指令。</p><p><strong>生命周期</strong>：构造 → 签名 → 广播 → mempool → 打包 → 确认</p><p><strong>签名前检查</strong>：To（转给谁）、Value（多少钱）、Data（合约调用参数）、Gas（手续费）</p><p><strong>关键</strong>：签名 = 授权，不是"点确认"。一旦广播，不可撤销。</p>` },
+    contract: { title: "智能合约（Smart Contract）", body: `<p>部署在链上的可执行代码。状态公开、执行透明。</p><p><strong>与后端 API 的区别</strong>：</p><p>• 代码公开 vs 私有<br>• 状态公开 vs 私有数据库<br>• 不可随意修改 vs 随时可改<br>• 每次调用消耗 Gas vs 服务器费用</p><p><strong>我部署的合约</strong>：<code>0x8df998f592de1321b62ee661fc9045c3af29b1e8</code></p>` },
+    gas: { title: "Gas（燃料费）", body: `<p>链上计算的成本单位。</p><p><strong>类比</strong>：开车耗油。路越远，耗油越多。</p><p><strong>计算</strong>：总费用 = Gas Used × Gas Price</p><p><strong>观察</strong>：</p><p>• 普通转账：21,000 Gas<br>• 部署简单合约：~200,000 Gas<br>• L2 比 L1 便宜 10-100 倍</p>` },
+    agent: { title: "Agent（智能体）", body: `<p>能自主规划、调用工具、管理状态的 AI 系统。</p><p><strong>与 Workflow 的区别</strong>：Agent 能根据中间结果动态调整策略，Workflow 路径固定。</p><p><strong>适合场景</strong>：开放式问题、多工具协作、中间结果决定下一步</p><p><strong>不适合</strong>：一次性问答（用 Prompt）、流程固定（用脚本）、高合规要求（用人工审核）</p>` },
+    tooluse: { title: "Tool Use（工具调用）", body: `<p>AI × Web3 的核心连接点。LLM 输出结构化请求，框架执行后回传结果。</p><p><strong>例子</strong>：</p><p>AI 决定"需要查余额" → 调用 RPC <code>eth_getBalance</code> → 返回结果 → AI 继续分析</p><p><strong>Web3 工具</strong>：RPC 查询、钱包签名、合约调用、区块浏览器查询</p><p><strong>关键</strong>：AI 决定"要做什么"，工具负责"怎么做"。</p>` },
+    guardrails: { title: "Guardrails（安全护栏）", body: `<p>AI × Web3 协作中必须有的安全机制。</p><p><strong>规则</strong>：</p><p>• AI 不直接接触私钥<br>• 签名/转账/合约写入必须人工确认<br>• AI 输出的合约代码必须编译+审查<br>• 设置操作限额（每日最大金额）<br>• 所有操作可追溯（日志+链上记录）</p><p><strong>为什么</strong>：链上操作不可撤销，AI 可能被 prompt injection 攻击。</p>` },
+    chain: { title: "链上执行", body: `<p>交易广播到网络后，由验证者打包进区块。</p><p><strong>特点</strong>：</p><p>• 不可撤销：一旦确认无法回滚<br>• 公开透明：所有人都能看到<br>• 需要 Gas：每步操作都有成本<br>• 需要等待：区块确认需要时间</p><p><strong>Sepolia 测试网</strong>：功能与主网相同，但代币无价值。</p>` },
+    verify: { title: "验证结果", body: `<p>在区块浏览器上确认交易状态。</p><p><strong>Etherscan 能查</strong>：</p><p>• 交易状态（Success/Fail）<br>• Gas 消耗<br>• 合约代码<br>• 地址余额和历史</p><p><strong>关键理解</strong>：区块链是公开的，地址是假名不是匿名。</p><p><strong>我的交易</strong>：<a href="https://sepolia.etherscan.io/tx/0x38e6576618bc71ab8ad8c5be9de8563e42ccc2dd02c479e4dac12c68b899d1b0" target="_blank">查看交易</a></p>` }
 };
 
 function explain(key) {
-    const panel = document.getElementById('explainPanel');
-    const overlay = document.getElementById('panelOverlay');
-    const title = document.getElementById('panelTitle');
-    const content = document.getElementById('explainContent');
     const exp = explanations[key];
     if (!exp) return;
-    title.textContent = exp.title;
-    content.innerHTML = exp.body;
-    panel.classList.add('open');
-    overlay.classList.add('open');
-    document.querySelectorAll('.pipe-node').forEach(n => n.classList.remove('active'));
+    document.getElementById('panelTitle').textContent = exp.title;
+    document.getElementById('explainContent').innerHTML = exp.body;
+    document.getElementById('explainPanel').classList.add('open');
+    document.getElementById('panelOverlay').classList.add('open');
+    document.querySelectorAll('.wf-node').forEach(n => n.classList.remove('active'));
     const stepMap = { prompt:1, llm:2, review:3, wallet:4, chain:5, verify:6 };
-    if (stepMap[key]) {
-        const node = document.querySelector(`[data-step="${stepMap[key]}"]`);
-        if (node) node.classList.add('active');
-    }
+    if (stepMap[key]) { const n = document.querySelector(`[data-step="${stepMap[key]}"]`); if (n) n.classList.add('active'); }
 }
-
 function closeExplain() {
     document.getElementById('explainPanel').classList.remove('open');
     document.getElementById('panelOverlay').classList.remove('open');
-    document.querySelectorAll('.pipe-node').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.wf-node').forEach(n => n.classList.remove('active'));
 }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeExplain(); });
 
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeExplain(); });
-
-const contractCode = `// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-contract SimpleStorage {
-    uint256 private storedValue;
-    address public owner;
-
-    event ValueChanged(address indexed updater, uint256 newValue);
-
-    constructor() {
-        owner = msg.sender;
-    }
-
-    function set(uint256 x) public {
-        storedValue = x;
-        emit ValueChanged(msg.sender, x);
-    }
-
-    function get() public view returns (uint256) {
-        return storedValue;
-    }
-}`;
-
-const explainCode = `SimpleStorage 合约解析：
-
-├── 状态变量
-│   ├── storedValue: 存储的数字 (private)
-│   └── owner: 合约所有者地址 (public)
-│
-├── 构造函数
-│   └── 部署时设置 owner = msg.sender
-│
-├── set(uint256 x)
-│   ├── 写入 storedValue = x
-│   └── 触发 ValueChanged 事件
-│
-└── get()
-    └── 返回 storedValue（只读，不消耗 Gas）`;
+const contractCode = `// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ncontract SimpleStorage {\n    uint256 private storedValue;\n    address public owner;\n\n    event ValueChanged(address indexed updater, uint256 newValue);\n\n    constructor() {\n        owner = msg.sender;\n    }\n\n    function set(uint256 x) public {\n        storedValue = x;\n        emit ValueChanged(msg.sender, x);\n    }\n\n    function get() public view returns (uint256) {\n        return storedValue;\n    }\n}`;
+const explainCode = `SimpleStorage 合约解析：\n\n├── 状态变量\n│   ├── storedValue: 存储的数字 (private)\n│   └── owner: 合约所有者地址 (public)\n│\n├── 构造函数\n│   └── 部署时设置 owner = msg.sender\n│\n├── set(uint256 x)\n│   ├── 写入 storedValue = x\n│   └── 触发 ValueChanged 事件\n│\n└── get()\n    └── 返回 storedValue（只读，不消耗 Gas）`;
 
 function addLog(tag, text) {
     const log = document.getElementById('execLog');
@@ -868,65 +631,44 @@ function addLog(tag, text) {
     log.appendChild(div);
     log.scrollTop = log.scrollHeight;
 }
-
 async function aiGenerate() {
     const output = document.getElementById('aiOutput');
     output.innerHTML = '<span style="color:var(--text-dim)">AI 正在生成代码...</span><span class="cursor"></span>';
     addLog('AI', '收到 Prompt："一个存储数字的简单合约"');
     await new Promise(r => setTimeout(r, 800));
-    let i = 0;
-    const speed = 8;
-    output.innerHTML = '';
-    const interval = setInterval(() => {
-        if (i < contractCode.length) {
-            const chunk = contractCode.slice(i, i + speed);
-            output.innerHTML += chunk.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-            i += speed;
-            output.scrollTop = output.scrollHeight;
-        } else {
-            clearInterval(interval);
-            addLog('AI', '合约代码生成完成，共 ' + contractCode.split('\n').length + ' 行');
-        }
+    let i = 0; output.innerHTML = '';
+    const iv = setInterval(() => {
+        if (i < contractCode.length) { output.innerHTML += contractCode.slice(i, i+8).replace(/</g,'&lt;').replace(/>/g,'&gt;'); i += 8; output.scrollTop = output.scrollHeight; }
+        else { clearInterval(iv); addLog('AI', '合约代码生成完成，共 ' + contractCode.split('\n').length + ' 行'); }
     }, 20);
 }
-
 async function aiExplain() {
     const output = document.getElementById('aiOutput');
     output.innerHTML = '<span style="color:var(--text-dim)">AI 正在分析合约...</span><span class="cursor"></span>';
     await new Promise(r => setTimeout(r, 600));
-    let i = 0;
-    output.innerHTML = '';
-    const speed = 10;
-    const interval = setInterval(() => {
-        if (i < explainCode.length) {
-            const chunk = explainCode.slice(i, i + speed);
-            output.innerHTML += chunk.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-            i += speed;
-            output.scrollTop = output.scrollHeight;
-        } else {
-            clearInterval(interval);
-        }
+    let i = 0; output.innerHTML = '';
+    const iv = setInterval(() => {
+        if (i < explainCode.length) { output.innerHTML += explainCode.slice(i, i+10).replace(/</g,'&lt;').replace(/>/g,'&gt;'); i += 10; output.scrollTop = output.scrollHeight; }
+        else clearInterval(iv);
     }, 20);
 }
-
 async function contractSet() {
     const val = document.getElementById('setInput').value || '42';
     const result = document.getElementById('chainResult');
     result.classList.add('show');
-    result.innerHTML = `<span style="color:var(--amber)">⏳ 发送交易: set(${val})...</span>`;
+    result.innerHTML = `<span style="color:var(--orange)">⏳ 发送交易: set(${val})...</span>`;
     addLog('人工', `确认签名: set(${val})`);
     await new Promise(r => setTimeout(r, 1500));
     const txHash = '0x' + Array.from({length:64}, () => Math.floor(Math.random()*16).toString(16)).join('');
     result.innerHTML = `<span style="color:var(--green)">✓ 交易已确认</span>\n\nTxHash: ${txHash}\nGas Used: 43,216\nBlock: #10932xxx`;
     addLog('链上', `set(${val}) 执行成功，Gas: 43,216`);
 }
-
 async function contractGet() {
     const result = document.getElementById('chainResult');
     result.classList.add('show');
-    result.innerHTML = `<span style="color:var(--amber)">⏳ 读取中...</span>`;
+    result.innerHTML = `<span style="color:var(--orange)">⏳ 读取中...</span>`;
     await new Promise(r => setTimeout(r, 800));
-    result.innerHTML = `<span style="color:var(--cyan)">get()</span> 返回值: <span style="color:var(--text-bright);font-weight:700">42</span>\n\n<span style="color:var(--text-dim)">链上只读操作，不消耗 Gas</span>`;
+    result.innerHTML = `<span style="color:var(--blue)">get()</span> 返回值: <span style="color:var(--light);font-weight:600">42</span>\n\n<span style="color:var(--text-dim)">链上只读操作，不消耗 Gas</span>`;
     addLog('链上', 'get() → 42（只读，无 Gas 消耗）');
 }
 </script>
