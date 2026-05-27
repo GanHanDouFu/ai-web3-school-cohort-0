@@ -82,15 +82,17 @@
 
 | 文件 | 说明 |
 |------|------|
-| `week1/notes/module-a-ai-basics.md` | AI 基础概念笔记 |
-| `week1/notes/module-b-web3-basics.md` | Web3 基础概念笔记 |
-| `week1/notes/module-c-crossover-experiment.md` | 交叉实验设计 |
+| `week1/notes/AI基础-从LLM到Agent.md` | AI 基础概念笔记 |
+| `week1/notes/Web3基础-账户钱包签名与链上执行.md` | Web3 基础概念笔记 |
+| `week1/notes/最小交叉实验-AI输出到链上执行.md` | 交叉实验设计 |
+| `week1/notes/概念串联-从LLM到链上执行.md` | AI × Web3 概念串联 |
+| `week1/notes/交叉实验记录.md` | 交叉实验记录 |
+| `week1/notes/工具对比-ClaudeCode与Codex.md` | 工具对比 |
+| `week1/notes/Web3实操指南.md` | 实操指南 |
 | `week1/prompts/learning-agent-prompt.md` | Agent 使用记录 |
 | `week1/logs/agent-session-01.md` | Agent 学习日志 |
 | `week1/demos/web3-concept-quiz.html` | Web3 概念测验（可交互） |
-| `week1/notes/concept-chain.md` | AI × Web3 概念串联 |
-| `week1/notes/crossover-experiment-record.md` | 交叉实验记录 |
-| `week1/demos/llm-token-visualizer.html` | LLM Token 生成可视化（高级挑战产物） |
+| `week1/demos/llm-token-visualizer.html` | LLM Token 生成可视化 |
 
 ## 可交互产物说明
 
