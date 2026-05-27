@@ -222,39 +222,43 @@ contract SimpleStorage {
 
 ### 钱包信息
 
-- 钱包地址：`0x__________________`
+- 钱包地址：`0xF0cf20f5821fFe917F24532075E2FAC81b580c2e`
 - 网络：Sepolia 测试网
 
 ### 测试币
 
-- 来源：（Faucet 名称）
-- 到账金额：______ SepoliaETH
-- 到账时间：______
+- 来源：sepolia-faucet.pk910.de
+- 到账金额：约 0.159 SepoliaETH
+- 到账时间：2026-05-27
 
 ### 测试交易
 
-- 交易哈希：`0x__________________`
-- 状态：______
-- 区块高度：______
-- Gas Used：______
-- Etherscan 链接：`https://sepolia.etherscan.io/tx/0x...`
+- 交易哈希：`0x38e6576618bc71ab8ad8c5be9de8563e42ccc2dd02c479e4dac12c68b899d1b0`
+- 状态：Success
+- 区块高度：10931719
+- Gas Used：21000
+- Gas 费：0.000177476589549 ETH
+- Etherscan 链接：https://sepolia.etherscan.io/tx/0x38e6576618bc71ab8ad8c5be9de8563e42ccc2dd02c479e4dac12c68b899d1b0
 
 ### 智能合约部署
 
-- 合约地址：`0x__________________`
-- 部署交易哈希：`0x__________________`
-- 区块高度：______
-- Etherscan 链接：`https://sepolia.etherscan.io/address/0x...`
+- 合约地址：`0x8df998f592de1321b62ee661fc9045c3af29b1e8`
+- 部署交易哈希：`0x1d334ce3ff9d40e8a2955fafb4fcf679f69bcb4a0c4cd5f0aa9345af45cbc30f`
+- 区块高度：10931941
+- Gas Used：199056
+- Gas 费：0.000717061619212224 ETH
+- Etherscan 链接：https://sepolia.etherscan.io/address/0x8df998f592de1321b62ee661fc9045c3af29b1e8
 
 ### 合约交互
 
-- set(42) 交易哈希：`0x__________________`
-- get() 返回值：______
-- Etherscan 链接：`https://sepolia.etherscan.io/tx/0x...`
+- set(42) 交易哈希：`0x2bdbe4adb57024ba652eedb52886507ae09a5cd2e9f32c700633003e6c7d8ba2`
+- get() 返回值：42
+- Etherscan 链接：https://sepolia.etherscan.io/tx/0x2bdbe4adb57024ba652eedb52886507ae09a5cd2e9f32c700633003e6c7d8ba2
 
 ### 遇到的问题
 
-> 记录你遇到的问题和解决方法...
+- 浏览器插件不显示测试币：需要手动切换到 Sepolia 网络
+- 手机和浏览器余额不同步：确认两端都连接到同一网络
 
 ---
 

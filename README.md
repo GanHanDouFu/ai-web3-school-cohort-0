@@ -59,14 +59,13 @@
 - [x] 理解每个环节的风险和应对措施
 - [x] 生成可交互学习产物（Web3 概念测验）
 
-### 待完成（需实际操作）
+### Web3 实操 ✅
 
-- [ ] 创建测试钱包（MetaMask）
-- [ ] 领取 Sepolia 测试币
-- [ ] 发送一笔测试交易
-- [ ] 部署一个最小智能合约
-- [ ] 完成一次合约读写
-- [ ] 完成模块 C 的实际链上实验
+- [x] 创建测试钱包（MetaMask）— 地址：`0xF0cf20f5821fFe917F24532075E2FAC81b580c2e`
+- [x] 领取 Sepolia 测试币 — 来源：sepolia-faucet.pk910.de
+- [x] 发送一笔测试交易 — [TxHash](https://sepolia.etherscan.io/tx/0x38e6576618bc71ab8ad8c5be9de8563e42ccc2dd02c479e4dac12c68b899d1b0)
+- [x] 部署一个最小智能合约 — [合约地址](https://sepolia.etherscan.io/address/0x8df998f592de1321b62ee661fc9045c3af29b1e8)
+- [x] 完成一次合约读写 — set(42) / get() → 42 — [TxHash](https://sepolia.etherscan.io/tx/0x2bdbe4adb57024ba652eedb52886507ae09a5cd2e9f32c700633003e6c7d8ba2)
 
 ## Learning Agent 配置
 
